@@ -1,0 +1,59 @@
+#!/bin/bash
+
+DOCKER_INSTANCE=default
+CMD_TOOL=devop-armyknife
+TOOL_REPO=https://github.com/drerik/devop-armyknife.git
+
+if [ $LOCAL = $REMOTE ]; then
+    echo "Up-to-date"
+elif [ $LOCAL = $BASE ]; then
+    echo "Need to pull"
+fi
+
+if [[ ! -d ~/.$CMD_TOOL ]]
+then
+	echo "Toolkit not found. Fetching..."
+	git clone $TOOL_REPO ~/.$CMD_TOOL
+fi
+
+cd ~/.$CMD_TOOL
+
+git remote update
+GIT_LOCAL=$(git rev-parse @)
+GIT_REMOTE=$(git rev-parse @{u})
+GIT_BASE=$(git merge-base @ @{u})
+
+if [ $GIT_LOCAL = $GIT_REMOTE ]; then
+    echo "$CMD_TOOL is up-to-date"
+elif [ $GIT_LOCAL = $GIT_BASE ]; then
+    echo "Found a new version of $CMD_TOOL, updating..."
+    git pull
+    docker-compose -p armyknife build
+
+    echo "Updating /usr/local/bin/$CMD_TOOL, please enter your password when asked by sudo..."
+    sudo cp $CMD_TOOL /usr/local/bin/$CMD_TOOL
+    sudo chmod +x /usr/local/bin/$CMD_TOOL
+fi
+
+
+if [[ ! -S /var/tmp/docker.sock || ! -S /var/run/docker.sock ]]
+then
+    echo "No native docker. Using docker-machine instance $DOCKER_INSTANCE "
+    if [[ ! "$(docker-machine status $DOCKER_INSTANCE)" == "Running" ]]
+    then
+    	echo "Docker host not up, starting  instance $DOCKER_INSTANCE"
+    	docker-machine start $DOCKER_INSTANCE
+        eval $(docker-machine env --shell bash $DOCKER_INSTANCE)
+    fi
+fi
+
+
+
+
+if [[ ! "$(docker images | grep '^armyknife-knife' | wc -l | sed 's/ //g')" == "1" ]]
+then
+	echo "No local $CMD_TOOL image found ( $(docker images | grep '^armyknife-knife' | wc -l | sed 's/ //g') ), building..."
+	docker-compose -p armyknife build
+fi
+
+docker-compose run --rm knife bash

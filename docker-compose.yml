@@ -1,0 +1,15 @@
+knife:
+  build: .
+  hostname: devop-armyknife
+  environment:
+    - OS_AUTH_URL
+    - OS_USERNAME
+    - OS_PASSWORD
+    - OS_REGION_NAME
+    - OS_USER_DOMAIN_NAME
+    - OS_IDENTITY_API_VERSION
+    - OS_PROJECT_NAME
+    - OS_PROJECT_DOMAIN_NAME
+  volumes:
+    - "$HOME:/home"
+    - "$PWD:/usr/src/app"
