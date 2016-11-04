@@ -36,7 +36,7 @@ elif [ $GIT_LOCAL = $GIT_BASE ]; then
 fi
 
 
-if [[ ! -S /var/tmp/docker.sock || ! -S /var/run/docker.sock ]]
+if [[ ! -e /var/tmp/docker.sock || ! -e /var/run/docker.sock ]]
 then
     echo "No native docker. Using docker-machine instance $DOCKER_INSTANCE "
     if [[ ! "$(docker-machine status $DOCKER_INSTANCE)" == "Running" ]]

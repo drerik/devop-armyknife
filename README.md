@@ -12,5 +12,8 @@ Installed tools:
 Your home folder is mounted as `/home`. Current dir as `/usr/src/app`
 
 
-# Build and run
-run `armyknife.sh`
+# Installation
+Run the following command to install devop-armyknife:
+```
+curl https://raw.githubusercontent.com/drerik/devop-armyknife/master/devop-armyknife | sh
+```
