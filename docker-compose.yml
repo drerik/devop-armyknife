@@ -12,6 +12,6 @@ knife:
     - OS_PROJECT_DOMAIN_NAME
   volumes:
     - "$HOME:/home"
-    - "$PWD:/workdir"
+    - "$CURRENT_DIR:/workdir"
     - "$HOME/.ssh:/root/.ssh"
     - "$HOME/.gitconfig:/root/.gitconfig"

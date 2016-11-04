@@ -1,14 +1,12 @@
 #!/bin/bash
 
+
 DOCKER_INSTANCE=default
 CMD_TOOL=devop-armyknife
 TOOL_REPO=https://github.com/drerik/devop-armyknife.git
 
-if [ $LOCAL = $REMOTE ]; then
-    echo "Up-to-date"
-elif [ $LOCAL = $BASE ]; then
-    echo "Need to pull"
-fi
+
+export CURRENT_DIR=$PWD
 
 if [[ ! -d ~/.$CMD_TOOL ]]
 then
